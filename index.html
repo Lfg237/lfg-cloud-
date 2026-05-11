@@ -5,87 +5,605 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cloud Storage 2026</title>
 
-<link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0f172a;
+color:white;
+height:100vh;
+overflow:hidden;
+}
+
+.login-box{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:rgba(255,255,255,0.08);
+padding:40px;
+border-radius:20px;
+backdrop-filter:blur(12px);
+width:330px;
+text-align:center;
+box-shadow:0 0 30px rgba(0,0,0,0.4);
+}
+
+.login-box h1{
+margin-bottom:15px;
+}
+
+.login-box p{
+margin-bottom:20px;
+color:#ccc;
+}
+
+.login-box input{
+width:100%;
+padding:14px;
+border:none;
+border-radius:12px;
+margin-bottom:20px;
+font-size:16px;
+outline:none;
+}
+
+.login-box button{
+width:100%;
+padding:14px;
+border:none;
+border-radius:12px;
+background:#2563eb;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+#error{
+margin-top:15px;
+color:#ff7070;
+}
+
+.cloud-app{
+display:none;
+height:100vh;
+}
+
+.sidebar{
+width:240px;
+background:#111827;
+padding:20px;
+position:fixed;
+top:0;
+left:0;
+bottom:0;
+overflow:auto;
+}
+
+.sidebar h2{
+margin-bottom:30px;
+}
+
+.sidebar ul{
+list-style:none;
+}
+
+.sidebar li{
+padding:15px;
+margin-bottom:10px;
+border-radius:12px;
+background:#1e293b;
+cursor:pointer;
+transition:0.3s;
+}
+
+.sidebar li:hover{
+background:#2563eb;
+}
+
+.main-content{
+margin-left:240px;
+padding:20px;
+width:100%;
+overflow:auto;
+}
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+gap:10px;
+}
+
+.upload-btn{
+background:#2563eb;
+padding:12px 20px;
+border-radius:12px;
+cursor:pointer;
+}
+
+.upload-btn input{
+display:none;
+}
+
+.storage-box{
+background:#1e293b;
+padding:20px;
+border-radius:18px;
+margin-bottom:20px;
+}
+
+.storage-text{
+display:flex;
+justify-content:space-between;
+margin-bottom:10px;
+}
+
+.storage-bar{
+height:12px;
+background:#111827;
+border-radius:20px;
+overflow:hidden;
+}
+
+.storage-fill{
+height:100%;
+width:0%;
+background:#2563eb;
+}
+
+.files-grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+gap:20px;
+}
+
+.file-card{
+background:#1e293b;
+padding:15px;
+border-radius:18px;
+}
+
+.file-preview{
+width:100%;
+height:150px;
+object-fit:cover;
+border-radius:12px;
+margin-bottom:10px;
+background:#000;
+}
+
+.file-name{
+font-size:14px;
+margin-bottom:10px;
+word-break:break-word;
+}
+
+.share-input{
+width:100%;
+padding:10px;
+border:none;
+border-radius:10px;
+margin-bottom:10px;
+background:#0f172a;
+color:white;
+font-size:12px;
+}
+
+.file-actions{
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.file-actions button{
+padding:10px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+color:white;
+}
+
+.download-btn{
+background:#2563eb;
+}
+
+.delete-btn{
+background:#ef4444;
+}
+
+@media(max-width:768px){
+
+body{
+overflow:auto;
+}
+
+.cloud-app{
+flex-direction:column;
+}
+
+.sidebar{
+position:relative;
+width:100%;
+height:auto;
+}
+
+.main-content{
+margin-left:0;
+}
+
+}
+
+</style>
 </head>
 <body>
 
-<!-- LOGIN -->
 <div class="login-box" id="loginBox">
-    <h1>☁ Cloud Storage</h1>
-    <p>Entrez votre ID personnel</p>
 
-    <input type="text" id="userId" placeholder="Votre ID">
+<h1>☁ Cloud Storage</h1>
 
-    <button onclick="loginUser()">
-        <i class="fa-solid fa-lock"></i>
-        Connexion
-    </button>
+<p>Entrez votre ID</p>
 
-    <div id="error"></div>
+<input type="text" id="userId" placeholder="Votre ID">
+
+<button onclick="loginUser()">
+<i class="fa-solid fa-lock"></i>
+Connexion
+</button>
+
+<div id="error"></div>
+
 </div>
 
-<!-- CLOUD -->
 <div class="cloud-app" id="cloudApp">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <h2>☁ MyCloud</h2>
+<aside class="sidebar">
 
-        <ul>
-            <li onclick="showCategory('all')">
-                <i class="fa-solid fa-folder"></i> Tous les fichiers
-            </li>
+<h2>☁ MyCloud</h2>
 
-            <li onclick="showCategory('images')">
-                <i class="fa-solid fa-image"></i> Images
-            </li>
+<ul>
 
-            <li onclick="showCategory('videos')">
-                <i class="fa-solid fa-video"></i> Vidéos
-            </li>
+<li onclick="showCategory('all')">
+<i class="fa-solid fa-folder"></i>
+ Tous les fichiers
+</li>
 
-            <li onclick="showCategory('audio')">
-                <i class="fa-solid fa-music"></i> Audio
-            </li>
+<li onclick="showCategory('images')">
+<i class="fa-solid fa-image"></i>
+ Images
+</li>
 
-            <li onclick="showCategory('documents')">
-                <i class="fa-solid fa-file"></i> Documents
-            </li>
-        </ul>
-    </aside>
+<li onclick="showCategory('videos')">
+<i class="fa-solid fa-video"></i>
+ Vidéos
+</li>
 
-    <!-- MAIN -->
-    <main class="main-content">
+<li onclick="showCategory('audio')">
+<i class="fa-solid fa-music"></i>
+ Audio
+</li>
 
-        <div class="topbar">
-            <h3 id="welcome">Bienvenue</h3>
+<li onclick="showCategory('documents')">
+<i class="fa-solid fa-file"></i>
+ Documents
+</li>
 
-            <label class="upload-btn">
-                <input type="file" id="fileInput" multiple>
-                <i class="fa-solid fa-upload"></i>
-                Ajouter
-            </label>
-        </div>
+</ul>
 
-        <!-- STORAGE INFO -->
-        <div class="storage-box">
-            <div class="storage-text">
-                <span>Espace utilisé</span>
-                <span id="storageSize">0 MB</span>
-            </div>
+</aside>
 
-            <div class="storage-bar">
-                <div class="storage-fill" id="storageFill"></div>
-            </div>
-        </div>
+<main class="main-content">
 
-        <!-- FILES -->
-        <div class="files-grid" id="filesGrid"></div>
+<div class="topbar">
 
-    </main>
+<h3 id="welcome">Bienvenue</h3>
+
+<label class="upload-btn">
+
+<input type="file" id="fileInput" multiple>
+
+<i class="fa-solid fa-upload"></i>
+ Ajouter
+
+</label>
+
 </div>
 
-<script src="script.js"></script>
+<div class="storage-box">
+
+<div class="storage-text">
+
+<span>Espace utilisé</span>
+
+<span id="storageSize">0 MB</span>
+
+</div>
+
+<div class="storage-bar">
+
+<div class="storage-fill" id="storageFill"></div>
+
+</div>
+
+</div>
+
+<div class="files-grid" id="filesGrid"></div>
+
+</main>
+
+</div>
+
+<script>
+
+const users = {
+"michel233":true,
+"client45":true,
+"admin2026":true
+};
+
+let filesData = [];
+let currentCategory = "all";
+
+function loginUser(){
+
+const input = document.getElementById("userId").value.trim().toLowerCase();
+
+if(users[input]){
+
+localStorage.setItem("cloudUser",input);
+
+document.getElementById("loginBox").style.display="none";
+
+document.getElementById("cloudApp").style.display="flex";
+
+document.getElementById("welcome").innerHTML="Bienvenue "+input;
+
+loadFiles();
+
+}else{
+
+document.getElementById("error").innerHTML="ID incorrect";
+
+}
+
+}
+
+function getCategory(file){
+
+if(file.type.includes("image")) return "images";
+
+if(file.type.includes("video")) return "videos";
+
+if(file.type.includes("audio")) return "audio";
+
+return "documents";
+
+}
+
+function saveFiles(){
+
+const user = localStorage.getItem("cloudUser");
+
+localStorage.setItem("cloudFiles_"+user,JSON.stringify(filesData));
+
+}
+
+function loadFiles(){
+
+const user = localStorage.getItem("cloudUser");
+
+const saved = localStorage.getItem("cloudFiles_"+user);
+
+filesData = saved ? JSON.parse(saved) : [];
+
+renderFiles();
+
+}
+
+function generateLink(data,name){
+
+return window.location.href.split("?")[0] +
+"?file="+encodeURIComponent(data)+
+"&name="+encodeURIComponent(name);
+
+}
+
+function copyLink(link){
+
+navigator.clipboard.writeText(link);
+
+alert("Lien copié");
+
+}
+
+function renderFiles(){
+
+const grid = document.getElementById("filesGrid");
+
+grid.innerHTML="";
+
+let total = 0;
+
+filesData.forEach((file,index)=>{
+
+total += file.size;
+
+if(currentCategory !== "all" && file.category !== currentCategory){
+return;
+}
+
+let preview = "";
+
+if(file.category==="images"){
+
+preview = `<img src="${file.data}" class="file-preview">`;
+
+}
+else if(file.category==="videos"){
+
+preview = `
+<video class="file-preview" controls>
+<source src="${file.data}">
+</video>
+`;
+
+}
+else if(file.category==="audio"){
+
+preview = `
+<audio controls style="width:100%;margin-bottom:10px;">
+<source src="${file.data}">
+</audio>
+`;
+
+}
+else{
+
+preview = `
+<div class="file-preview" style="display:flex;align-items:center;justify-content:center;font-size:60px;">
+📄
+</div>
+`;
+
+}
+
+const shareLink = generateLink(file.data,file.name);
+
+const card = document.createElement("div");
+
+card.className="file-card";
+
+card.innerHTML = `
+
+${preview}
+
+<div class="file-name">${file.name}</div>
+
+<input class="share-input" value="${shareLink}" readonly>
+
+<div class="file-actions">
+
+<button class="download-btn"
+onclick="downloadFile('${file.data}','${file.name}')">
+Télécharger
+</button>
+
+<button class="download-btn"
+onclick="copyLink('${shareLink}')">
+Copier lien
+</button>
+
+<button class="delete-btn"
+onclick="deleteFile(${index})">
+Supprimer
+</button>
+
+</div>
+
+`;
+
+grid.appendChild(card);
+
+});
+
+const mb = (total/(1024*1024)).toFixed(2);
+
+document.getElementById("storageSize").innerHTML = mb+" MB";
+
+let percent = Math.min((mb/500)*100,100);
+
+document.getElementById("storageFill").style.width = percent+"%";
+
+}
+
+function showCategory(cat){
+
+currentCategory = cat;
+
+renderFiles();
+
+}
+
+function deleteFile(index){
+
+filesData.splice(index,1);
+
+saveFiles();
+
+renderFiles();
+
+}
+
+function downloadFile(data,name){
+
+const a = document.createElement("a");
+
+a.href=data;
+
+a.download=name;
+
+a.click();
+
+}
+
+document.getElementById("fileInput").addEventListener("change",function(e){
+
+const files = e.target.files;
+
+Array.from(files).forEach(file=>{
+
+const reader = new FileReader();
+
+reader.onload = function(event){
+
+filesData.push({
+name:file.name,
+size:file.size,
+type:file.type,
+category:getCategory(file),
+data:event.target.result
+});
+
+saveFiles();
+
+renderFiles();
+
+}
+
+reader.readAsDataURL(file);
+
+});
+
+});
+
+window.onload = ()=>{
+
+const user = localStorage.getItem("cloudUser");
+
+if(user && users[user]){
+
+document.getElementById("loginBox").style.display="none";
+
+document.getElementById("cloudApp").style.display="flex";
+
+document.getElementById("welcome").innerHTML="Bienvenue "+user;
+
+loadFiles();
+
+}
+
+}
+
+</script>
+
 </body>
-</html> 
+</html>
