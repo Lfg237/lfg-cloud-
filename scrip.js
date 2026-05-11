@@ -1,7 +1,8 @@
 const users = {
     "michel233": true,
     "client45": true,
-    "admin2026": true
+    "admin2026": true,
+    "CLIENT45": true
 };
 
 let currentCategory = 'all';
@@ -9,7 +10,7 @@ let filesData = [];
 
 function loginUser(){
 
-    const input = document.getElementById('userId').value.trim();
+    const input = document.getElementById('userId').value.trim().toLowerCase();
 
     if(users[input]){
 
@@ -39,18 +40,37 @@ function getCategory(file){
 }
 
 function saveFiles(){
-    localStorage.setItem('cloudFiles', JSON.stringify(filesData));
+
+    const currentUser = localStorage.getItem('cloudUser');
+
+    localStorage.setItem('cloudFiles_' + currentUser, JSON.stringify(filesData));
 }
 
 function loadFiles(){
 
-    const saved = localStorage.getItem('cloudFiles');
+    const currentUser = localStorage.getItem('cloudUser');
+
+    const saved = localStorage.getItem('cloudFiles_' + currentUser);
 
     if(saved){
         filesData = JSON.parse(saved);
     }
 
     renderFiles();
+}
+
+function generateShareLink(fileData, fileName){
+
+    const encoded = encodeURIComponent(fileData);
+
+    return `${window.location.origin}${window.location.pathname}?file=${encoded}&name=${encodeURIComponent(fileName)}`;
+}
+
+function copyLink(link){
+
+    navigator.clipboard.writeText(link);
+
+    alert('Lien copié');
 }
 
 function renderFiles(){
@@ -95,13 +115,21 @@ function renderFiles(){
             </div>`;
         }
 
+        const shareLink = generateShareLink(file.data, file.name);
+
         card.innerHTML = `
             ${preview}
             <div class="file-name">${file.name}</div>
 
+            <input value="${shareLink}" readonly class="share-input">
+
             <div class="file-actions">
                 <button class="download-btn" onclick="downloadFile('${file.data}','${file.name}')">
                     Télécharger
+                </button>
+
+                <button class="download-btn" onclick="copyLink('${shareLink}')">
+                    Copier lien
                 </button>
 
                 <button class="delete-btn" onclick="deleteFile(${index})">
@@ -180,4 +208,4 @@ window.onload = ()=>{
 
         loadFiles();
     }
-              }
+}
