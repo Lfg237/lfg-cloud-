@@ -1,8 +1,7 @@
 const users = {
     "michel233": true,
     "client45": true,
-    "admin2026": true,
-    "CLIENT45": true
+    "admin2026": true
 };
 
 let currentCategory = 'all';
@@ -12,14 +11,14 @@ function loginUser(){
 
     const input = document.getElementById('userId').value.trim().toLowerCase();
 
-    if(users[input]){
+    if(users[input.toLowerCase()]){
 
-        localStorage.setItem('cloudUser', input);
+        localStorage.setItem('cloudUser', input.toLowerCase());
 
         document.getElementById('loginBox').style.display = 'none';
         document.getElementById('cloudApp').style.display = 'flex';
 
-        document.getElementById('welcome').innerHTML = `Bienvenue ${input}`;
+        document.getElementById('welcome').innerHTML = `Bienvenue ${input.toLowerCase()}`;
 
         loadFiles();
 
@@ -199,7 +198,7 @@ window.onload = ()=>{
 
     const user = localStorage.getItem('cloudUser');
 
-    if(user && users[user]){
+    if(user && users[user.toLowerCase()]){
 
         document.getElementById('loginBox').style.display = 'none';
         document.getElementById('cloudApp').style.display = 'flex';
