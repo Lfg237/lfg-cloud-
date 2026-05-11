@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud Storage 2026</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-box" id="loginBox">
+    <h1>☁ Cloud Storage</h1>
+    <p>Entrez votre ID personnel</p>
+
+    <input type="text" id="userId" placeholder="Votre ID">
+
+    <button onclick="loginUser()">
+        <i class="fa-solid fa-lock"></i>
+        Connexion
+    </button>
+
+    <div id="error"></div>
+</div>
+
+<!-- CLOUD -->
+<div class="cloud-app" id="cloudApp">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <h2>☁ MyCloud</h2>
+
+        <ul>
+            <li onclick="showCategory('all')">
+                <i class="fa-solid fa-folder"></i> Tous les fichiers
+            </li>
+
+            <li onclick="showCategory('images')">
+                <i class="fa-solid fa-image"></i> Images
+            </li>
+
+            <li onclick="showCategory('videos')">
+                <i class="fa-solid fa-video"></i> Vidéos
+            </li>
+
+            <li onclick="showCategory('audio')">
+                <i class="fa-solid fa-music"></i> Audio
+            </li>
+
+            <li onclick="showCategory('documents')">
+                <i class="fa-solid fa-file"></i> Documents
+            </li>
+        </ul>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+        <div class="topbar">
+            <h3 id="welcome">Bienvenue</h3>
+
+            <label class="upload-btn">
+                <input type="file" id="fileInput" multiple>
+                <i class="fa-solid fa-upload"></i>
+                Ajouter
+            </label>
+        </div>
+
+        <!-- STORAGE INFO -->
+        <div class="storage-box">
+            <div class="storage-text">
+                <span>Espace utilisé</span>
+                <span id="storageSize">0 MB</span>
+            </div>
+
+            <div class="storage-bar">
+                <div class="storage-fill" id="storageFill"></div>
+            </div>
+        </div>
+
+        <!-- FILES -->
+        <div class="files-grid" id="filesGrid"></div>
+
+    </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+  </html>
