@@ -191,6 +191,17 @@ display:flex;
 gap:10px;
 }
 
+.share-input{
+width:100%;
+padding:10px;
+border:none;
+border-radius:10px;
+margin-bottom:10px;
+background:#0f172a;
+color:white;
+font-size:12px;
+}
+
 .file-actions button{
 flex:1;
 padding:10px;
@@ -224,4 +235,4 @@ margin-left:0;
 .cloud-app{
 flex-direction:column;
 }
-  }
+}
